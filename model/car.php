@@ -14,8 +14,7 @@ abstract class Vehicle {
 
 }
 
-// User.php
-// Car.php
+
 class Car extends Vehicle {
     public function __construct($category, $modele, $prix, $disponibiliter, $image) {
         $this->category = $category;

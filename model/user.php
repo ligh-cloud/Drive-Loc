@@ -19,7 +19,7 @@ class User {
     }
 
     public function login() {
-        // Implementation to login user
+        
     }
 
     public function logout() {
