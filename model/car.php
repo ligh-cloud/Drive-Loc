@@ -9,40 +9,69 @@ abstract class Vehicle {
     protected $image;
 
     abstract public function getDetails();
-    abstract public function calculateRentalCost($days);
+    
 
 
 }
 
 
 class Car extends Vehicle {
-    public function __construct($category, $modele, $prix, $disponibiliter, $image) {
+    private $marque;
+    private $annee;
+
+    public function __construct($category, $modele, $prix, $marque, $annee, $image) {
         $this->category = $category;
         $this->modele = $modele;
         $this->prix = $prix;
-        $this->disponibiliter = $disponibiliter;
+        $this->marque = $marque;
+        $this->annee = $annee;
         $this->image = $image;
     }
 
     public function getDetails() {
-        // Implementation to get car details
+        return [
+            'category' => $this->category,
+            'modele' => $this->modele,
+            'prix' => $this->prix,
+            'marque' => $this->marque,
+            'annee' => $this->annee,
+            'image' => $this->image
+        ];
     }
 
-    public function calculateRentalCost($days) {
-        return $this->prix * $days;
+    public function addCar($carData) {
+        try {
+            $db = new Database();
+            $conn = $db->getConnection();
+            
+            $sql = "INSERT INTO cars (category, modele,marque , prix, places, image) 
+                   VALUES (:category, :modele,:marque, :prix, :place, :image)";
+            
+            $stmt = $conn->prepare($sql);
+            return $stmt->execute($carData);
+        }
+        catch(PDOException $e) {
+            throw new Exception("Error adding car: " . $e->getMessage());
+        }
     }
 
-    public function makeReservation($user, $date_start, $date_end) {
-        // Implementation to make a reservation
+    public function getAllCars() {
+        try {
+            $db = new Database();
+            $conn = $db->getConnection();
+            
+            $sql = "SELECT * FROM cars";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            throw new Exception("Error getting cars: " . $e->getMessage());
+        }
     }
 
-    public function cancelReservation($reservation_id) {
-        // Implementation to cancel a reservation
-    }
+    // Other methods remain the same...
 
-    public function addCar() {
-        // Implementation to add a car
-    }
 
     public function updateCar() {
         // Implementation to update car details

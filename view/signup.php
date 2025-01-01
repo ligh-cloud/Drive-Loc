@@ -27,12 +27,12 @@
                 </h2>
                 <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
                     Ou
-                    <a href="login.html" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                    <a href="login.php" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
                         connectez-vous à votre compte existant
                     </a>
                 </p>
             </div>
-            <form class="mt-8 space-y-6" action="#" method="POST">
+            <form class="mt-8 space-y-6" action="../controller/signup.php" method="POST">
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div>
                         <label for="first-name" class="sr-only">Prénom</label>
