@@ -4,7 +4,11 @@ require_once "../model/Car.php";
 
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    if($_SESSION['role'] == 'user'){
+        header('Location: ../view/client_dashboard.php');
+    }
     header('Location: ../view/login.php');
+   
     exit();
 }
 

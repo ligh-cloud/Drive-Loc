@@ -69,6 +69,52 @@ class Car extends Vehicle {
             throw new Exception("Error getting cars: " . $e->getMessage());
         }
     }
+    public function getAvailableCars($categoryId = null, $maxPrice = null) {
+        try {
+            $db = new Database();
+            $conn = $db->getConnection();
+            
+            $sql = "SELECT c.*, cat.nom as category_name 
+                    FROM cars c 
+                    LEFT JOIN categories cat ON c.categorie_id = cat.id 
+                    WHERE c.disponibilite = true";
+            $params = [];
+            
+            if ($categoryId) {
+                $sql .= " AND c.categorie_id = :category_id";
+                $params['category_id'] = $categoryId;
+            }
+            
+            if ($maxPrice) {
+                $sql .= " AND c.prix <= :max_price";
+                $params['max_price'] = $maxPrice;
+            }
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error fetching cars: " . $e->getMessage());
+        }
+    }
+    
+    public function getCarById($carId) {
+        try {
+            $db = new Database();
+            $conn = $db->getConnection();
+            
+            $sql = "SELECT c.*, cat.nom as category_name 
+                    FROM cars c 
+                    LEFT JOIN categories cat ON c.categorie_id = cat.id 
+                    WHERE c.id_car = :car_id";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(['car_id' => $carId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Error fetching car: " . $e->getMessage());
+        }
+    }
 
     // Other methods remain the same...
 

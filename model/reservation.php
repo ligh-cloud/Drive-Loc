@@ -1,4 +1,6 @@
 <?php 
+
+require "conexion_db.php";
 class Reservation {
     private $userId;
     private $carId;

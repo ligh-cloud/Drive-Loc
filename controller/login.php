@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if($_SESSION['role'] === 'admin') {
                 header("location: ../../view/admin_dashboard.php");
             } else {
-                header("location: ../../view/user_dashboard.php");
+                header("location: ../../view/client_dashboard.php");
             }
             exit();
         } else {
