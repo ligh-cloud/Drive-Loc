@@ -37,7 +37,7 @@
 
     <div class="container-fluid">
         <div class="row">
-        
+
             <nav class="col-md-2 d-none d-md-block sidebar">
                 <div class="position-sticky">
                     <div class="text-center mb-4">
@@ -78,7 +78,7 @@
                 </div>
             </nav>
 
-          
+
             <main class="col-md-10 ms-sm-auto px-4">
                 <?php if (isset($errorMessage)): ?>
                     <div class="alert alert-danger mt-3">
@@ -92,7 +92,7 @@
                     </div>
                 <?php endif; ?>
 
-           
+
                 <div class="row mt-4">
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="card stat-card border-left-primary shadow h-100 py-2">
@@ -213,49 +213,148 @@
 
 
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add New Car</h6>
+                    <div class="card-header py-3 d-flex justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Add New Cars</h6>
+                        <button type="button" class="btn btn-success btn-sm" onclick="addCarForm()">
+                            <i class="bi bi-plus-circle"></i> Add Another Car
+                        </button>
                     </div>
                     <div class="card-body">
-                        <form method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="action" value="add_car">
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label for="marque" class="form-label">Brand</label>
-                                    <input type="text" class="form-control" id="marque" name="marque" required>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="modele" class="form-label">Model</label>
-                                    <input type="text" class="form-control" id="modele" name="modele" required>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label for="annee" class="form-label">Year</label>
-                                    <input type="number" class="form-control" id="annee" name="annee" required>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label for="category" class="form-label">Category</label>
-                                    <select class="form-control" id="category" name="categorie_id" required>
-                                        <option value="">Select category</option>
-                                        <?php foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id']; ?>">
-                                                <?php echo htmlspecialchars($category['nom']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label for="price" class="form-label">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="image" class="form-label">Car Image</label>
-                                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                        <form method="POST" enctype="multipart/form-data" id="multipleCarForm">
+                            <input type="hidden" name="action" value="add_multiple_cars">
+                            <div id="carFormsContainer">
+                                <div class="car-form mb-4 border-bottom pb-4">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">Brand</label>
+                                            <input type="text" class="form-control" name="cars[0][marque]" required>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-label">Model</label>
+                                            <input type="text" class="form-control" name="cars[0][modele]" required>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Year</label>
+                                            <input type="number" class="form-control" name="cars[0][annee]" required>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-control" name="cars[0][categorie_id]" required>
+                                                <option value="">Select category</option>
+                                                <?php foreach ($categories as $category): ?>
+                                                    <option value="<?php echo htmlspecialchars($category['id']); ?>">
+                                                        <?php echo htmlspecialchars($category['nom']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 mb-3">
+                                            <label class="form-label">Price</label>
+                                            <input type="number" class="form-control" name="cars[0][price]" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Car Image</label>
+                                            <input type="file" class="form-control" name="cars[0][image]" accept="image/*" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeCarForm(this)" style="display: none;">
+                                        <i class="bi bi-trash"></i> Remove Car
+                                    </button>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Add Car</button>
+                            <button type="submit" class="btn btn-primary mt-3">Add Cars</button>
                         </form>
                     </div>
                 </div>
+
+
+                <script>
+                    let carFormCount = 1;
+
+                    function addCarForm() {
+                        const container = document.getElementById('carFormsContainer');
+                        const newForm = document.createElement('div');
+                        newForm.className = 'car-form mb-4 border-bottom pb-4';
+
+                        newForm.innerHTML = `
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Brand</label>
+                <input type="text" class="form-control" name="cars[${carFormCount}][marque]" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" name="cars[${carFormCount}][modele]" required>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label class="form-label">Year</label>
+                <input type="number" class="form-control" name="cars[${carFormCount}][annee]" required>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-control" name="cars[${carFormCount}][categorie_id]" required>
+                    <option value="">Select category</option>
+                    ${Array.from(document.querySelector('select[name="cars[0][categorie_id]"]').options)
+                        .map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('')}
+                </select>
+            </div>
+            <div class="col-md-2 mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-control" name="cars[${carFormCount}][price]" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Car Image</label>
+                <input type="file" class="form-control" name="cars[${carFormCount}][image]" accept="image/*" required>
+            </div>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm" onclick="removeCarForm(this)">
+            <i class="bi bi-trash"></i> Remove Car
+        </button>
+    `;
+
+                        container.appendChild(newForm);
+                        carFormCount++;
+
+
+                        updateRemoveButtons();
+                    }
+
+                    function removeCarForm(button) {
+                        button.closest('.car-form').remove();
+                        updateRemoveButtons();
+                    }
+
+                    function updateRemoveButtons() {
+                        const removeButtons = document.querySelectorAll('.car-form button[onclick*="removeCarForm"]');
+                        const shouldShow = removeButtons.length > 1;
+                        removeButtons.forEach(button => {
+                            button.style.display = shouldShow ? 'block' : 'none';
+                        });
+                    }
+
+
+                    document.getElementById('multipleCarForm').addEventListener('submit', function(e) {
+                        const forms = document.querySelectorAll('.car-form');
+                        let isValid = true;
+
+                        forms.forEach(form => {
+                            const inputs = form.querySelectorAll('input[required], select[required]');
+                            inputs.forEach(input => {
+                                if (!input.value) {
+                                    isValid = false;
+                                    input.classList.add('is-invalid');
+                                } else {
+                                    input.classList.remove('is-invalid');
+                                }
+                            });
+                        });
+
+                        if (!isValid) {
+                            e.preventDefault();
+                            alert('Please fill in all required fields for all cars.');
+                        }
+                    });
+                </script>
             </main>
         </div>
     </div>

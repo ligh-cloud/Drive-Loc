@@ -2,7 +2,7 @@
 
 abstract class Vehicle {
     protected $id;
-    protected $category;
+    protected $categorie_id;
     protected $modele;
     protected $prix;
     protected $disponibiliter;
@@ -19,8 +19,8 @@ class Car extends Vehicle {
     private $marque;
     private $annee;
 
-    public function __construct($category, $modele, $prix, $marque, $annee, $image) {
-        $this->category = $category;
+    public function __construct($categorie_id, $modele, $prix, $marque, $annee, $image) {
+        $this->categorie_id = $categorie_id;
         $this->modele = $modele;
         $this->prix = $prix;
         $this->marque = $marque;
@@ -30,7 +30,7 @@ class Car extends Vehicle {
 
     public function getDetails() {
         return [
-            'category' => $this->category,
+            'categorie_id' => $this->categorie_id,
             'modele' => $this->modele,
             'prix' => $this->prix,
             'marque' => $this->marque,
@@ -44,16 +44,28 @@ class Car extends Vehicle {
             $db = new Database();
             $conn = $db->getConnection();
             
-            $sql = "INSERT INTO cars (category, modele,marque , prix, places, image) 
-                   VALUES (:category, :modele,:marque, :prix, :place, :image)";
+            $sql = "INSERT INTO cars (categorie_id, modele, marque, prix, places, image) 
+                   VALUES (:categorie_id, :modele, :marque, :prix, :place, :image)";
             
             $stmt = $conn->prepare($sql);
-            return $stmt->execute($carData);
+            
+       
+            $params = [
+                ':categorie_id' => $carData['categorie_id'],
+                ':modele' => $carData['modele'],
+                ':marque' => $carData['marque'],
+                ':prix' => $carData['prix'],
+                ':place' => $carData['place'],
+                ':image' => $carData['image']
+            ];
+            
+            return $stmt->execute($params);
         }
         catch(PDOException $e) {
             throw new Exception("Error adding car: " . $e->getMessage());
         }
     }
+   
 
     public function getAllCars() {
         try {

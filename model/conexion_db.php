@@ -1,5 +1,5 @@
 <?php 
-
+if (!class_exists('Database')) {
 class Database {
     private $host = "localhost";
     private $dbname = "location";  
@@ -28,7 +28,7 @@ class Database {
         return $this->conn;
     }
 }
-
+}
 
 
 ?>

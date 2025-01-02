@@ -110,40 +110,7 @@ class User {
         return true;
     }
 
-    public function updateProfile($userId, $data) {
-        try {
-            $db = new Database();
-            $conn = $db->getConnection();
-            
-            $updateFields = [];
-            $params = [];
-            
-            foreach($data as $key => $value) {
-                if(in_array($key, ['nom', 'prenom', 'email'])) {
-                    $updateFields[] = "$key = :$key";
-                    $params[":$key"] = $value;
-                }
-            }
-            
-            if(!empty($updateFields)) {
-                $sql = "UPDATE users SET " . implode(", ", $updateFields) . 
-                       " WHERE id = :id AND archive = 'false'";
-                
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(":id", $userId);
-                
-                foreach($params as $key => &$value) {
-                    $stmt->bindParam($key, $value);
-                }
-                
-                return $stmt->execute();
-            }
-            return false;
-        }
-        catch(PDOException $e) {
-            throw new Exception("Update error: " . $e->getMessage());
-        }
-    }
+ 
 }
 
 class Admin extends User {

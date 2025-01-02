@@ -29,7 +29,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         } else {
             $_SESSION['error'] = "Email ou mot de passe incorrect";
-            header("Location: ../view/login.php");
+            header("Location: ../../view/login.php");
             exit();
         }
     }

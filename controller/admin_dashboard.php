@@ -42,10 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     break;
                     
                     case 'add_car':
-                        if (isset($_POST['marque']) && isset($_POST['modele']) && 
-                            isset($_POST['annee']) && isset($_POST['category']) && 
-                            isset($_POST['price']) && isset($_FILES['image'])) {
-                            
+                        if (isset($_POST['marque']) && isset($_POST['modele']) && isset($_POST['categorie_id'])) {
                             try {
                              
                                 $uploadDir = '../uploads/cars/';
@@ -53,42 +50,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     mkdir($uploadDir, 0777, true);
                                 }
                     
+                        
                                 $fileExtension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
                                 $fileName = uniqid() . '.' . $fileExtension;
                                 $uploadFile = $uploadDir . $fileName;
                     
-                               
+                            
                                 $allowedTypes = ['jpg', 'jpeg', 'png'];
                                 if (!in_array(strtolower($fileExtension), $allowedTypes)) {
                                     throw new Exception("Invalid file type. Only JPG, JPEG, and PNG are allowed.");
                                 }
                     
-                               
                                 if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                                   
-                                    $newCar = new Car(
-                                        htmlspecialchars(trim($_POST['category'])),
-                                        htmlspecialchars(trim($_POST['modele'])),
-                                        floatval($_POST['price']),
-                                        htmlspecialchars(trim($_POST['marque'])),
-                                        intval($_POST['annee']),
-                                        $fileName  
-                                    );
-                    
-                               
                                     $carData = [
-                                        'category' => $_POST['category'],
-                                        'marque' => $_POST['marque'],
-                                        'modele' => $_POST['modele'],
-                                        'prix' => $_POST['price'],
-                                        'place' => $_POST['places'] ?? 5, 
+                                        'categorie_id' => intval($_POST['categorie_id']), 
+                                        'marque' => htmlspecialchars(trim($_POST['marque'])),
+                                        'modele' => htmlspecialchars(trim($_POST['modele'])),
+                                        'prix' => floatval($_POST['price']),
+                                        'place' => isset($_POST['places']) ? intval($_POST['places']) : 5,
                                         'image' => $fileName
                                     ];
                     
+                                    
+                                    $newCar = new Car(
+                                        $carData['categorie_id'],
+                                        $carData['modele'],
+                                        $carData['prix'],
+                                        $carData['marque'],
+                                        intval($_POST['annee']),
+                                        $fileName
+                                    );
+                    
                                
                                     if($newCar->addCar($carData)) {
-                                        $successMessage = "Car added successfully";
-                                        $_SESSION['success'] = $successMessage;
+                                        $_SESSION['success'] = "Car added successfully";
                                     } else {
                                         throw new Exception("Failed to add car");
                                     }
@@ -109,6 +104,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             exit();
                         }
                         break;
+                        case 'add_multiple_cars':
+                            if (isset($_POST['cars']) && is_array($_POST['cars'])) {
+                                try {
+                                    $uploadDir = '../uploads/cars/';
+                                    if (!file_exists($uploadDir)) {
+                                        mkdir($uploadDir, 0777, true);
+                                    }
+                        
+                                    $successCount = 0;
+                                    $errors = [];
+                        
+                                    foreach ($_POST['cars'] as $index => $carData) {
+                                        try {
+                                          
+                                            if (empty($carData['marque']) || empty($carData['modele']) || 
+                                                empty($carData['categorie_id']) || empty($carData['price'])) {
+                                                throw new Exception("Missing required fields for car #" . ($index + 1));
+                                            }
+                        
+                                            
+                                            $fileKey = "cars_{$index}_image";
+                                            if (!isset($_FILES['cars']['name'][$index]['image'])) {
+                                                throw new Exception("No image provided for car #" . ($index + 1));
+                                            }
+                        
+                                            $file = $_FILES['cars']['tmp_name'][$index]['image'];
+                                            $fileName = uniqid() . '_' . basename($_FILES['cars']['name'][$index]['image']);
+                                            $uploadFile = $uploadDir . $fileName;
+                        
+                                            
+                                            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                            $allowedTypes = ['jpg', 'jpeg', 'png'];
+                                            if (!in_array($fileExtension, $allowedTypes)) {
+                                                throw new Exception("Invalid file type for car #" . ($index + 1));
+                                            }
+                        
+                                            if (move_uploaded_file($file, $uploadFile)) {
+                                                $newCar = new Car(
+                                                    intval($carData['categorie_id']),
+                                                    htmlspecialchars(trim($carData['modele'])),
+                                                    floatval($carData['price']),
+                                                    htmlspecialchars(trim($carData['marque'])),
+                                                    intval($carData['annee']),
+                                                    $fileName
+                                                );
+                        
+                                                $carDataForDb = [
+                                                    'categorie_id' => intval($carData['categorie_id']),
+                                                    'marque' => $carData['marque'],
+                                                    'modele' => $carData['modele'],
+                                                    'prix' => $carData['price'],
+                                                    'place' => $carData['places'] ?? 5,
+                                                    'image' => $fileName
+                                                ];
+                        
+                                                if ($newCar->addCar($carDataForDb)) {
+                                                    $successCount++;
+                                                } else {
+                                                    throw new Exception("Failed to add car #" . ($index + 1));
+                                                }
+                                            } else {
+                                                throw new Exception("Failed to upload image for car #" . ($index + 1));
+                                            }
+                                        } catch (Exception $e) {
+                                            $errors[] = $e->getMessage();
+                                        }
+                                    }
+                        
+                                    if ($successCount > 0) {
+                                        $_SESSION['success'] = "Successfully added $successCount cars.";
+                                    }
+                                    if (!empty($errors)) {
+                                        $_SESSION['error'] = "Some cars could not be added: " . implode(", ", $errors);
+                                    }
+                        
+                                    header('Location: ' . $_SERVER['PHP_SELF']);
+                                    exit();
+                                } catch (Exception $e) {
+                                    $_SESSION['error'] = $e->getMessage();
+                                    header('Location: ' . $_SERVER['PHP_SELF']);
+                                    exit();
+                                }
+                            }
+                            break;
                         case 'add_category':
                             if (isset($_POST['nom']) && isset($_POST['description'])) {
                                 try {

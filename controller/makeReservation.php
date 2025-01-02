@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once "../model/Reservation.php";
-require_once "../model/Database.php";
+
 
 try {
     // Check if user is logged in
