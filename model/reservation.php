@@ -64,37 +64,37 @@ class Reservation {
         }
     }
 
-    private function isCarAvailable($carId, $dateDebut, $dateFin) {
-        try {
-            $db = new Database();
-            $conn = $db->getConnection();
+    // private function isCarAvailable($carId, $dateDebut, $dateFin) {
+    //     try {
+    //         $db = new Database();
+    //         $conn = $db->getConnection();
             
-            $sql = "SELECT COUNT(*) FROM reservations 
-                   WHERE id_car = :carId 
-                   AND statut = 'en_cours'
-                   AND ((date_debut BETWEEN :dateDebut AND :dateFin) 
-                   OR (date_fin BETWEEN :dateDebut AND :dateFin))";
+    //         $sql = "SELECT COUNT(*) FROM reservations 
+    //                WHERE id_car = :carId 
+    //                AND statut = 'en_cours'
+    //                AND ((date_debut BETWEEN :dateDebut AND :dateFin) 
+    //                OR (date_fin BETWEEN :dateDebut AND :dateFin))";
             
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([
-                ':carId' => $carId,
-                ':dateDebut' => $dateDebut,
-                ':dateFin' => $dateFin
-            ]);
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->execute([
+    //             ':carId' => $carId,
+    //             ':dateDebut' => $dateDebut,
+    //             ':dateFin' => $dateFin
+    //         ]);
             
-            return $stmt->fetchColumn() == 0;
-        }
-        catch(PDOException $e) {
-            throw new Exception("Error checking availability: " . $e->getMessage());
-        }
-    }
+    //         return $stmt->fetchColumn() == 0;
+    //     }
+    //     catch(PDOException $e) {
+    //         throw new Exception("Error checking availability: " . $e->getMessage());
+    //     }
+    // }
 
     public function getUserReservations($userId) {
         try {
             $db = new Database();
             $conn = $db->getConnection();
             
-            $sql = "SELECT r.*, c.modele, c.category 
+            $sql = "SELECT r.*, c.modele, c.marque
                    FROM reservations r
                    JOIN cars c ON r.id_car = c.id_car
                    WHERE r.id_user = :userId

@@ -141,6 +141,58 @@
                 </form>
             </div>
         </div>
+        <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Model
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Brand
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Start Date
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    End Date
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Total Price
+                </th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <?php foreach($reservationClient as $reservation): ?>
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <?php echo htmlspecialchars($reservation['modele']); ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?php echo htmlspecialchars($reservation['marque']); ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?php echo htmlspecialchars($reservation['date_debut']); ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?php echo htmlspecialchars($reservation['date_fin']); ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-600">
+                    €<?php echo number_format(htmlspecialchars($reservation['prix_total']), 2); ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            
+            <?php if(empty($reservationClient)): ?>
+            <tr>
+                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                    No reservations found
+                </td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>  
 
         <script>
             function showReservationModal(car) {

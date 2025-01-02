@@ -39,8 +39,9 @@ try {
 
 
     $cars = $carObj->getAvailableCars($categoryFilter, $maxPriceFilter);
-
     
+    $reservationClient = $reservationObj->getUserReservations($user['id']);
+   
     if (isset($_GET['car_id'])) {
         $selectedCar = $carObj->getCarById($_GET['car_id']);
         if (!$selectedCar) {
