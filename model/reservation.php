@@ -37,17 +37,17 @@ class Reservation {
         }
     }
 
-    public function makeReservation($carId, $dateDebut, $dateFin) {
+    public function makeReservation($carId, $dateDebut, $dateFin , $prixtotal) {
         try {
             $db = new Database();
             $conn = $db->getConnection();
             
-            if(!$this->isCarAvailable($carId, $dateDebut, $dateFin)) {
-                throw new Exception("Car is not available for these dates");
-            }
+            // if(!$this->isCarAvailable($carId, $dateDebut, $dateFin)) {
+            //     throw new Exception("Car is not available for these dates");
+            // }
             
-            $sql = "INSERT INTO reservations (id_user, id_car, date_debut, date_fin, statut) 
-                   VALUES (:userId, :carId, :dateDebut, :dateFin, :statut)";
+            $sql = "INSERT INTO reservations (id_user,  id_car, date_debut, date_fin, statut , prix_total) 
+                   VALUES (:userId, :carId, :dateDebut, :dateFin, :statut , :prix)";
             
             $stmt = $conn->prepare($sql);
             return $stmt->execute([
@@ -55,7 +55,8 @@ class Reservation {
                 ':carId' => $carId,
                 ':dateDebut' => $dateDebut,
                 ':dateFin' => $dateFin,
-                ':statut' => $this->statut
+                ':statut' => $this->statut,
+                ':prix' => $prixtotal
             ]);
         }
         catch(PDOException $e) {
