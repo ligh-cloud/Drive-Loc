@@ -58,7 +58,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#cars">
+                            <a class="nav-link" href="manage_car.php">
                                 <i class="bi bi-car-front"></i> Cars
                             </a>
                         </li>
@@ -68,7 +68,7 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                    <div class="absolute bottom-0 start-0 w-100 p-3">
                         <form action="../controller/logout.php" method="POST">
                             <button type="submit" class="btn btn-danger w-100">
                                 <i class="bi bi-box-arrow-right"></i> Logout

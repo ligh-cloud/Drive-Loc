@@ -1,5 +1,5 @@
 <?php 
-
+require "conexion_db.php";
 abstract class Vehicle {
     protected $id;
     protected $categorie_id;
@@ -130,6 +130,20 @@ class Car extends Vehicle {
         }
     }
     
+public function deleteCar($carId) {
+    try {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        $sql = "DELETE FROM cars WHERE id_car = :car_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':car_id', $carId);
+        return $stmt->execute();
+    } catch(PDOException $e) {
+        throw new Exception("Error deleting car: " . $e->getMessage());
+    }
+}
+    
     public function getCarById($carId) {
         try {
             $db = new Database();
@@ -155,9 +169,6 @@ class Car extends Vehicle {
         // Implementation to update car details
     }
 
-    public function deleteCar() {
-        // Implementation to delete a car
-    }
 
     public function filterCars($category) {
         // Implementation to filter cars by category
