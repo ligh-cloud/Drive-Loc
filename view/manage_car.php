@@ -2,12 +2,7 @@
 require_once "../model/car.php";
 
 
-session_start();
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: login.php');
-    exit();
-}
 
 $errorMessage = $_SESSION['error'] ?? null;
 $successMessage = $_SESSION['success'] ?? null;
@@ -57,7 +52,7 @@ unset($_SESSION['error'], $_SESSION['success']);
                     <a href="add_car.php" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                         Add New Car
                     </a>
-                    <a href="client_dashboard.php" class="text-gray-600 hover:text-gray-900">
+                    <a href="admin_dashboard.php" class="text-gray-600 hover:text-gray-900">
                         Back to Dashboard
                     </a>
                 </div>
