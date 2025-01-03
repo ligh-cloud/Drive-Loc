@@ -81,30 +81,50 @@ class Car extends Vehicle {
             throw new Exception("Error getting cars: " . $e->getMessage());
         }
     }
-    public function getAvailableCars($categoryId = null, $maxPrice = null) {
+    public function getAvailableCars($categoryId = null, $maxPrice = null, $page = 1, $perPage = 6) {
         try {
             $db = new Database();
             $conn = $db->getConnection();
             
-            $sql = "SELECT c.*, cat.nom as category_name 
-                    FROM cars c 
-                    LEFT JOIN categories cat ON c.categorie_id = cat.id 
-                    WHERE c.disponibilite = true";
+     
+            $baseQuery = "FROM cars c 
+                         LEFT JOIN categories cat ON c.categorie_id = cat.id 
+                         WHERE c.disponibilite = true";
             $params = [];
             
             if ($categoryId) {
-                $sql .= " AND c.categorie_id = :category_id";
+                $baseQuery .= " AND c.categorie_id = :category_id";
                 $params['category_id'] = $categoryId;
             }
             
             if ($maxPrice) {
-                $sql .= " AND c.prix <= :max_price";
+                $baseQuery .= " AND c.prix <= :max_price";
                 $params['max_price'] = $maxPrice;
             }
             
-            $stmt = $conn->prepare($sql);
-            $stmt->execute($params);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $countQuery = "SELECT COUNT(*) as total " . $baseQuery;
+            $countStmt = $conn->prepare($countQuery);
+            $countStmt->execute($params);
+            $totalCount = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+            
+           
+            $offset = ($page - 1) * $perPage;
+            $dataQuery = "SELECT c.*, cat.nom as category_name " . $baseQuery . 
+                        " LIMIT :limit OFFSET :offset";
+            
+            $params['limit'] = $perPage;
+            $params['offset'] = $offset;
+            
+            $dataStmt = $conn->prepare($dataQuery);
+            $dataStmt->execute($params);
+            $cars = $dataStmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return [
+                'cars' => $cars,
+                'total' => $totalCount,
+                'pages' => ceil($totalCount / $perPage)
+            ];
+            
         } catch (PDOException $e) {
             throw new Exception("Error fetching cars: " . $e->getMessage());
         }

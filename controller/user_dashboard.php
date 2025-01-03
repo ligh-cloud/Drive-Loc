@@ -25,23 +25,28 @@ $user = [
 ];
 
 try {
-   
     $carObj = new Car("", "", "", "", "", "");
     $categoryObj = new Admin("", "", "", "", "");
     $reservationObj = new Reservation($user['id']);
 
-
     $categories = $categoryObj->getAllCategories();
-
 
     $categoryFilter = $_GET['category'] ?? null;
     $maxPriceFilter = $_GET['max_price'] ?? null;
-
-
-    $cars = $carObj->getAvailableCars($categoryFilter, $maxPriceFilter);
+    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     
-    $reservationClient = $reservationObj->getUserReservations($user['id']);
    
+    $carsData = $carObj->getAvailableCars($categoryFilter, $maxPriceFilter, $currentPage, 6);
+    
+    $cars = $carsData['cars'];
+    $totalPages = $carsData['pages'];
+    
+    if ($currentPage < 1) $currentPage = 1;
+    if ($currentPage > $totalPages) $currentPage = $totalPages;
+
+    $reservationClient = $reservationObj->getUserReservations($user['id']);
+
+    
     if (isset($_GET['car_id'])) {
         $selectedCar = $carObj->getCarById($_GET['car_id']);
         if (!$selectedCar) {
