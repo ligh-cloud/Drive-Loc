@@ -62,18 +62,16 @@ CREATE TABLE reservations (
 
 CREATE TABLE avis (
     id_avis INT AUTO_INCREMENT PRIMARY KEY,
-    id_client INT NOT NULL,
-    id_car INT NOT NULL,
+    id_reservation INT NOT NULL,
+   
     note INT NOT NULL CHECK (note BETWEEN 1 AND 5),
     commentaire TEXT NOT NULL,
     archive_avis ENUM('true', 'false') NOT NULL DEFAULT 'false',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_client) REFERENCES users(id)
+    FOREIGN KEY (id_reservation) REFERENCES reservations(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (id_car) REFERENCES cars(id_car)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    
 );
 
 
