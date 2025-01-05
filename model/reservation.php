@@ -13,13 +13,15 @@ class Reservation {
         $this->statut = 'en_cours';
     }
 
-   
+   public function getAllReservations   (){
+
+   }
     public function getRecentReservations($limit = 5) {
         try {
             $db = new Database();
             $conn = $db->getConnection();
             
-            $sql = "SELECT r.*, c.modele, c.category, u.nom, u.prenom 
+            $sql = "SELECT r.*, c.modele,  u.nom, u.prenom 
                    FROM reservations r
                    JOIN cars c ON r.id_car = c.id_car
                    JOIN users u ON r.id_user = u.id

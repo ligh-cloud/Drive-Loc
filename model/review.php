@@ -14,7 +14,7 @@ class Review {
         $this->rating = $rating;
         $this->archive = 'false';
     }
-
+    
     public function showReview($user_id){
         $db = new Database();
         $conn = $db->getConnection();

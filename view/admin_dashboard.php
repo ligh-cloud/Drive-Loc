@@ -63,7 +63,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#reservations">
+                            <a class="nav-link" href="view_reservation.php">
                                 <i class="bi bi-calendar-check"></i> Reservations
                             </a>
                         </li>
