@@ -16,9 +16,8 @@ try {
 
    
     $car_id = filter_var($_POST['car_id'], FILTER_VALIDATE_INT);
-    $date_debut = filter_var($_POST['date_debut'], FILTER_SANITIZE_STRING);
-    $date_fin = filter_var($_POST['date_fin'], FILTER_SANITIZE_STRING);
-
+    $date_debut = filter_var($_POST['date_debut'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);  
+    $date_fin = filter_var($_POST['date_fin'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);   
     $start_date = new DateTime($date_debut);
     $end_date = new DateTime($date_fin);
     $current_date = new DateTime();
