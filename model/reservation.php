@@ -13,9 +13,6 @@ class Reservation {
         $this->statut = 'en_cours';
     }
 
-   public function getAllReservations   (){
-
-   }
     public function getRecentReservations($limit = 5) {
         try {
             $db = new Database();

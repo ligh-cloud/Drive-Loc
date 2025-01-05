@@ -10,8 +10,6 @@ abstract class Vehicle {
 
     abstract public function getDetails();
     
-
-
 }
 
 
@@ -130,19 +128,19 @@ class Car extends Vehicle {
         }
     }
     
-public function deleteCar($carId) {
-    try {
-        $db = new Database();
-        $conn = $db->getConnection();
+// public function deleteCar($carId) {
+//     try {
+//         $db = new Database();
+//         $conn = $db->getConnection();
 
-        $sql = "DELETE FROM cars WHERE id_car = :car_id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':car_id', $carId);
-        return $stmt->execute();
-    } catch(PDOException $e) {
-        throw new Exception("Error deleting car: " . $e->getMessage());
-    }
-}
+//         $sql = "DELETE FROM cars WHERE id_car = :car_id";
+//         $stmt = $conn->prepare($sql);
+//         $stmt->bindParam(':car_id', $carId);
+//         return $stmt->execute();
+//     } catch(PDOException $e) {
+//         throw new Exception("Error deleting car: " . $e->getMessage());
+//     }
+// }
     
     public function getCarById($carId) {
         try {
@@ -162,16 +160,5 @@ public function deleteCar($carId) {
         }
     }
 
-    // Other methods remain the same...
-
-
-    public function updateCar() {
-        // Implementation to update car details
-    }
-
-
-    public function filterCars($category) {
-        // Implementation to filter cars by category
-    }
 }
 ?>
