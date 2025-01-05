@@ -111,7 +111,7 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <form method="POST" id="reservationForm">
+                    <form method="POST"  action="../controller/makeReservation.php" id="reservationForm">
                         <input type="hidden" name="action" value="<?php htmlspecialchars($car['id_car']) ?>">
                         <input type="hidden" name="car_id" id="carId">
                         <input type="hidden" name="car_price" id="carPrice">
