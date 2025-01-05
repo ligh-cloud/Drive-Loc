@@ -50,7 +50,19 @@
                     <p><?php echo htmlspecialchars($successMessage); ?></p>
                 </div>
             <?php endif; ?>
+            <?php if (isset($_SESSION['error_message'])): ?>
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                    <p><?php echo htmlspecialchars($_SESSION['error_message']); ?></p>
+                </div>
+                <?php unset($_SESSION['error_message']); ?>
+            <?php endif; ?>
 
+            <?php if (isset($_SESSION['success_message'])): ?>
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                    <p><?php echo htmlspecialchars($_SESSION['success_message']); ?></p>
+                </div>
+                <?php unset($_SESSION['success_message']); ?>
+            <?php endif; ?>
             <!-- Filters -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                 <h2 class="text-xl font-bold mb-4">Filter Cars</h2>
@@ -111,7 +123,7 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <form method="POST"  action="../controller/makeReservation.php" id="reservationForm">
+                    <form method="POST" action="../controller/makeReservation.php" id="reservationForm">
                         <input type="hidden" name="action" value="<?php htmlspecialchars($car['id_car']) ?>">
                         <input type="hidden" name="car_id" id="carId">
                         <input type="hidden" name="car_price" id="carPrice">

@@ -36,20 +36,24 @@ class Reservation {
         }
     }
 
-    public function makeReservation($carId, $dateDebut, $dateFin , $prixtotal) {
+    public function makeReservation($carId, $dateDebut, $dateFin, $prixtotal) {
         try {
             $db = new Database();
             $conn = $db->getConnection();
             
-            // if(!$this->isCarAvailable($carId, $dateDebut, $dateFin)) {
-            //     throw new Exception("Car is not available for these dates");
-            // }
+            $conn->beginTransaction();
+  
+            if (!is_numeric($carId) || !is_numeric($prixtotal)) {
+                throw new Exception("Invalid car ID or price format");
+            }
             
-            $sql = "INSERT INTO reservations (id_user,  id_car, date_debut, date_fin, statut , prix_total) 
-                   VALUES (:userId, :carId, :dateDebut, :dateFin, :statut , :prix)";
+          
+            
+            $sql = "INSERT INTO reservations (id_user, id_car, date_debut, date_fin, statut, prix_total)
+                    VALUES (:userId, :carId, :dateDebut, :dateFin, :statut, :prix)";
             
             $stmt = $conn->prepare($sql);
-            return $stmt->execute([
+            $result = $stmt->execute([
                 ':userId' => $this->userId,
                 ':carId' => $carId,
                 ':dateDebut' => $dateDebut,
@@ -57,11 +61,30 @@ class Reservation {
                 ':statut' => $this->statut,
                 ':prix' => $prixtotal
             ]);
-        }
-        catch(PDOException $e) {
+            
+            if (!$result) {
+                throw new Exception("Failed to insert reservation");
+            }
+            
+       
+            $conn->commit();
+            return true;
+            
+        } catch (PDOException $e) {
+           
+            if ($conn && $conn->inTransaction()) {
+                $conn->rollBack();
+            }
             throw new Exception("Reservation error: " . $e->getMessage());
+        } catch (Exception $e) {
+            
+            if ($conn && $conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            throw $e;
         }
     }
+    
 
     // private function isCarAvailable($carId, $dateDebut, $dateFin) {
     //     try {
