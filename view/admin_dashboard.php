@@ -67,6 +67,12 @@
                                 <i class="bi bi-calendar-check"></i> Reservations
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="add_article.php">
+                                <i class="bi bi-calendar-check"></i> add article
+                            </a>
+                        </li>
+                        
                     </ul>
                     <div class="absolute bottom-0 start-0 w-100 p-3">
                         <form action="../controller/logout.php" method="POST">
