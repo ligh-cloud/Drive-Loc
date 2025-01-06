@@ -41,69 +41,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     break;
                     
-                    case 'add_car':
-                        if (isset($_POST['marque']) && isset($_POST['modele']) && isset($_POST['categorie_id'])) {
-                            try {
+                    // case 'add_car':
+                    //     if (isset($_POST['marque']) && isset($_POST['modele']) && isset($_POST['categorie_id'])) {
+                    //         try {
                              
-                                $uploadDir = '../uploads/cars/';
-                                if (!file_exists($uploadDir)) {
-                                    mkdir($uploadDir, 0777, true);
-                                }
+                    //             $uploadDir = '../uploads/cars/';
+                    //             if (!file_exists($uploadDir)) {
+                    //                 mkdir($uploadDir, 0777, true);
+                    //             }
                     
                         
-                                $fileExtension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                                $fileName = uniqid() . '.' . $fileExtension;
-                                $uploadFile = $uploadDir . $fileName;
+                    //             $fileExtension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                    //             $fileName = uniqid() . '.' . $fileExtension;
+                    //             $uploadFile = $uploadDir . $fileName;
                     
                             
-                                $allowedTypes = ['jpg', 'jpeg', 'png'];
-                                if (!in_array(strtolower($fileExtension), $allowedTypes)) {
-                                    throw new Exception("Invalid file type. Only JPG, JPEG, and PNG are allowed.");
-                                }
+                    //             $allowedTypes = ['jpg', 'jpeg', 'png'];
+                    //             if (!in_array(strtolower($fileExtension), $allowedTypes)) {
+                    //                 throw new Exception("Invalid file type. Only JPG, JPEG, and PNG are allowed.");
+                    //             }
                     
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                                    $carData = [
-                                        'categorie_id' => intval($_POST['categorie_id']), 
-                                        'marque' => htmlspecialchars(trim($_POST['marque'])),
-                                        'modele' => htmlspecialchars(trim($_POST['modele'])),
-                                        'prix' => floatval($_POST['price']),
-                                        'place' => isset($_POST['places']) ? intval($_POST['places']) : 5,
-                                        'image' => $fileName
-                                    ];
+                    //             if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                    //                 $carData = [
+                    //                     'categorie_id' => intval($_POST['categorie_id']), 
+                    //                     'marque' => htmlspecialchars(trim($_POST['marque'])),
+                    //                     'modele' => htmlspecialchars(trim($_POST['modele'])),
+                    //                     'prix' => floatval($_POST['price']),
+                    //                     'place' => isset($_POST['places']) ? intval($_POST['places']) : 5,
+                    //                     'image' => $fileName
+                    //                 ];
                     
                                     
-                                    $newCar = new Car(
-                                        $carData['categorie_id'],
-                                        $carData['modele'],
-                                        $carData['prix'],
-                                        $carData['marque'],
-                                        intval($_POST['annee']),
-                                        $fileName
-                                    );
+                    //                 $newCar = new Car(
+                    //                     $carData['categorie_id'],
+                    //                     $carData['modele'],
+                    //                     $carData['prix'],
+                    //                     $carData['marque'],
+                    //                     intval($_POST['annee']),
+                    //                     $fileName
+                    //                 );
                     
                                
-                                    if($newCar->addCar($carData)) {
-                                        $_SESSION['success'] = "Car added successfully";
-                                    } else {
-                                        throw new Exception("Failed to add car");
-                                    }
-                                } else {
-                                    throw new Exception("Failed to upload image");
-                                }
+                    //                 if($newCar->addCar($carData)) {
+                    //                     $_SESSION['success'] = "Car added successfully";
+                    //                 } else {
+                    //                     throw new Exception("Failed to add car");
+                    //                 }
+                    //             } else {
+                    //                 throw new Exception("Failed to upload image");
+                    //             }
                                 
-                                header('Location: ' . $_SERVER['PHP_SELF']);
-                                exit();
-                            } catch (Exception $e) {
-                                $_SESSION['error'] = $e->getMessage();
-                                header('Location: ' . $_SERVER['PHP_SELF']);
-                                exit();
-                            }
-                        } else {
-                            $_SESSION['error'] = "All car fields are required";
-                            header('Location: ' . $_SERVER['PHP_SELF']);
-                            exit();
-                        }
-                        break;
+                    //             header('Location: ' . $_SERVER['PHP_SELF']);
+                    //             exit();
+                    //         } catch (Exception $e) {
+                    //             $_SESSION['error'] = $e->getMessage();
+                    //             header('Location: ' . $_SERVER['PHP_SELF']);
+                    //             exit();
+                    //         }
+                    //     } else {
+                    //         $_SESSION['error'] = "All car fields are required";
+                    //         header('Location: ' . $_SERVER['PHP_SELF']);
+                    //         exit();
+                    //     }
+                    //     break;
                         case 'add_multiple_cars':
                             if (isset($_POST['cars']) && is_array($_POST['cars'])) {
                                 try {

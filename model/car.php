@@ -128,19 +128,19 @@ class Car extends Vehicle {
         }
     }
     
-// public function deleteCar($carId) {
-//     try {
-//         $db = new Database();
-//         $conn = $db->getConnection();
+public function deleteCar($carId) {
+    try {
+        $db = new Database();
+        $conn = $db->getConnection();
 
-//         $sql = "DELETE FROM cars WHERE id_car = :car_id";
-//         $stmt = $conn->prepare($sql);
-//         $stmt->bindParam(':car_id', $carId);
-//         return $stmt->execute();
-//     } catch(PDOException $e) {
-//         throw new Exception("Error deleting car: " . $e->getMessage());
-//     }
-// }
+        $sql = "DELETE FROM cars WHERE id_car = :car_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':car_id', $carId);
+        return $stmt->execute();
+    } catch(PDOException $e) {
+        throw new Exception("Error deleting car: " . $e->getMessage());
+    }
+}
     
     public function getCarById($carId) {
         try {
