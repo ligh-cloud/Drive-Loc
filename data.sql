@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS location;
 USE location;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
@@ -11,15 +11,14 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
     description TEXT
 );
 
-CREATE TABLE cars (
+CREATE TABLE IF NOT EXISTS cars (
     id_car INT AUTO_INCREMENT PRIMARY KEY,
-
     marque VARCHAR(100) NOT NULL,
     modele VARCHAR(100) NOT NULL,
     prix DECIMAL(10,2) NOT NULL,
@@ -33,7 +32,7 @@ CREATE TABLE cars (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE role (
+CREATE TABLE IF NOT EXISTS role (
     id_role INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     role ENUM('admin', 'user') NOT NULL DEFAULT 'user',
@@ -43,7 +42,7 @@ CREATE TABLE role (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE reservations (
+CREATE TABLE IF NOT EXISTS reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     id_car INT NOT NULL,
@@ -60,23 +59,49 @@ CREATE TABLE reservations (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE avis (
+CREATE TABLE IF NOT EXISTS avis (
     id_avis INT AUTO_INCREMENT PRIMARY KEY,
     id_reservation INT NOT NULL,
-   
     note INT NOT NULL CHECK (note BETWEEN 1 AND 5),
     commentaire TEXT NOT NULL,
     archive_avis ENUM('true', 'false') NOT NULL DEFAULT 'false',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_reservation) REFERENCES reservations(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    
+        ON UPDATE CASCADE
 );
 
+CREATE TABLE theme (
+    id_theme INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
 
+CREATE TABLE article (
+    id_article INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    image VARCHAR(150),
+    video VARCHAR(150),
+    user_id INT,
+    theme_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (theme_id) REFERENCES theme(id_theme)
+);
 
+CREATE TABLE commentaire (
+    id_commentaire INT AUTO_INCREMENT PRIMARY KEY,
+    commentaire TEXT NOT NULL
+);
 
--- CREATE INDEX idx_user_email ON users(email);
--- CREATE INDEX idx_car_category ON cars(category);
--- CREATE INDEX idx_reservation_dates ON reservations(date_debut, date_fin);
+CREATE TABLE tags (
+    id_tag INT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE acrticleTags (
+    id_article INT,
+    id_tag INT,
+    PRIMARY KEY (id_article, id_tag),
+    FOREIGN KEY (id_article) REFERENCES article(id_article),
+    FOREIGN KEY (id_tag) REFERENCES tags(id_tag)
+);
