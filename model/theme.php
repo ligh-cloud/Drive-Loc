@@ -35,6 +35,19 @@ static function deleteTheme($id_theme){
         throw new Exception("error changing the name of the theme" . $e->getMessage());
     }
 }
+static function showAllthemes(){
+    try{
+        $db = new Database;
+        $conn = $db->getConnection();
+        $query = "SELECT *FROM theme ";
+        $stm = $conn->prepare($query);
+        $stm->execute();
+        return $stm->fetchall(PDO::FETCH_ASSOC);
+    }
+    catch(PDOException $e){
+        throw new Exception("error showing all the themes " . $e->getMessage());
+    }
+}
 
 
 }
