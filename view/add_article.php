@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
@@ -13,6 +13,7 @@ if (empty($_SESSION['csrf_token'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,21 +25,25 @@ if (empty($_SESSION['csrf_token'])) {
             color: white;
             padding: 10px 0;
         }
+
         .footer {
             background-color: #343a40;
             color: white;
             padding: 10px 0;
         }
+
         .content-wrapper {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
+
         .content {
             flex: 1;
         }
     </style>
 </head>
+
 <body>
     <div class="content-wrapper">
         <!-- Header -->
@@ -72,7 +77,8 @@ if (empty($_SESSION['csrf_token'])) {
             <h1 class="mb-4">Add New Article</h1>
             <?php if (isset($_SESSION['success'])): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                    <?php echo $_SESSION['success'];
+                    unset($_SESSION['success']); ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -80,7 +86,8 @@ if (empty($_SESSION['csrf_token'])) {
             <?php endif; ?>
             <?php if (isset($_SESSION['error'])): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                    <?php echo $_SESSION['error'];
+                    unset($_SESSION['error']); ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -113,9 +120,11 @@ if (empty($_SESSION['csrf_token'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="tags">Tags</label>
-                    <input type="text" class="form-control" id="tags" name="tags" required>
+                    <label for="tags-input">Tags</label>
+                    <input type="text" class="form-control" id="tags-input" name="tags-input" placeholder="Add a tag and press Enter">
                 </div>
+                <div class="tag-container" id="tag-container"></div>
+                <input type="hidden" name="tags" id="tags">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
@@ -127,8 +136,44 @@ if (empty($_SESSION['csrf_token'])) {
             </div>
         </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tagsInput = document.getElementById('tags-input');
+            const tagsContainer = document.getElementById('tag-container');
+            const tagsHiddenInput = document.getElementById('tags');
+            let tags = [];
 
+            tagsInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const tagValue = tagsInput.value.trim();
+                    if (tagValue && !tags.includes(tagValue)) {
+                        tags.push(tagValue);
+                        const tagElement = document.createElement('div');
+                        tagElement.classList.add('tag');
+                        tagElement.textContent = tagValue;
+                        const removeButton = document.createElement('button');
+                        removeButton.textContent = 'x';
+                        removeButton.addEventListener('click', () => {
+                            tags = tags.filter(tag => tag !== tagValue);
+                            tagsContainer.removeChild(tagElement);
+                            updateTagsInput();
+                        });
+                        tagElement.appendChild(removeButton);
+                        tagsContainer.appendChild(tagElement);
+                        tagsInput.value = '';
+                        updateTagsInput();
+                    }
+                }
+            });
+
+            function updateTagsInput() {
+                tagsHiddenInput.value = tags.join(',');
+            }
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
+
 </html>
