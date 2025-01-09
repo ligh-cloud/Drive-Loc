@@ -48,6 +48,33 @@ static function showAllthemes(){
         throw new Exception("error showing all the themes " . $e->getMessage());
     }
 }
+public static function filterByTheme($tagName) {
+    try {
+       
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        $query = "SELECT t.name, a.title, a.id_article, a.content, a.image 
+                  FROM theme t 
+                  INNER JOIN article a ON t.id_theme = a.theme_id 
+                  WHERE t.name = :tagName";
+        
+     
+        $stmt = $conn->prepare($query);
+   
+        $stmt->bindParam(':tagName', $tagName, PDO::PARAM_STR);
+ 
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        
+    }
+}
+
 
 
 }

@@ -63,7 +63,7 @@ session_start();
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example row, you would populate this with actual data from your database -->
+                        
                         <tr>
                             <td>1</td>
                             <td>Example Article</td>
@@ -75,7 +75,7 @@ session_start();
                                 <button class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
-                        <!-- Repeat for each article -->
+                   
                     </tbody>
                 </table>
             </div>

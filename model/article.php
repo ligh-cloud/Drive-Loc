@@ -32,7 +32,7 @@ class Article {
                 ':user_id' => $this->id_user,
                 ':theme_id' => $this->id_theme
             ]);
-            return $conn->lastInsertId(); // Return the last inserted ID
+            return $conn->lastInsertId();
         } catch (PDOException $e) {
             throw new Exception("Error creating article: " . $e->getMessage());
         }
@@ -62,6 +62,22 @@ class Article {
         $conn = $db->getConnection();
         $stmt = $conn->prepare("INSERT INTO acrticletags (id_article, id_tag) VALUES (?, ?)");
         $stmt->execute([$article_id, $tag_id]);
+    }
+    public static function searchByName($articleName) {
+        try {
+            $db = new Database();
+            $conn = $db->getConnection();
+            
+            $query = "SELECT * FROM article WHERE title LIKE :articleName";
+            $stmt = $conn->prepare($query);
+            $searchTerm = "%" . $articleName . "%";
+            $stmt->bindParam(':articleName', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 }
 ?>
