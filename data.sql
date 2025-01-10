@@ -80,6 +80,7 @@ CREATE TABLE article (
     id_article INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
+    statut ENUM('accepter' , 'en attente' , 'refuser') DEFAULT 'en attente',
     image VARCHAR(150),
     video VARCHAR(150),
     user_id INT,
@@ -91,6 +92,12 @@ CREATE TABLE article (
 CREATE TABLE commentaire (
     id_commentaire INT AUTO_INCREMENT PRIMARY KEY,
     commentaire TEXT NOT NULL
+);
+CREATE TABLE commentaireArticle(
+    id_commentaire INT,
+    id_article INT,
+    FOREIGN KEY (id_commentaire) REFERENCES commentaire(id_commentaire),
+    FOREIGN KEY (id_article) REFERENCES article(id_article)
 );
 
 CREATE TABLE tags (
@@ -104,4 +111,16 @@ CREATE TABLE acrticleTags (
     PRIMARY KEY (id_article, id_tag),
     FOREIGN KEY (id_article) REFERENCES article(id_article),
     FOREIGN KEY (id_tag) REFERENCES tags(id_tag)
+);
+CREATE TABLE IF NOT EXISTS favorites (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    article_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (article_id) REFERENCES article(id_article)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );

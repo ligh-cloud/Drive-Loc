@@ -68,8 +68,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="add_article.php">
-                                <i class="bi bi-calendar-check"></i> add article
+                            <a class="nav-link" href="gestionArticle.php">
+                                <i class="bi bi-calendar-check"></i> gerer les articles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="theme_article.php">
+                                <i class="bi bi-calendar-check"></i> gerer les theme
                             </a>
                         </li>
                         

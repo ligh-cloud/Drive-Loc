@@ -7,34 +7,19 @@ class Theme {
     public function __construct($name) {
         $this->name = $name;
     }
-
     public function createTheme() {
         try {
             $db = new Database();
             $conn = $db->getConnection();
-            $query = "INSERT INTO theme (name) VALUES (:name)";
-            $stm = $conn->prepare($query);
-            $stm->bindParam(":name", $this->name);
-            $stm->execute();
-            return true; 
+            $sql = "INSERT INTO theme (name) VALUES (:name)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':name', $this->name);
+            return $stmt->execute();
         } catch (PDOException $e) {
-            throw new Exception("Error theme: " . $e->getMessage());
-            return false; 
+            throw new Exception("Error creating theme: " . $e->getMessage());
         }
     }
-static function deleteTheme($id_theme){
-    try{
-    $db = new Database();
-        $conn = $db->getConnection();
-    $query = "DELETE FROM theme WHERE id_theme = :id_theme";
-    $stm = $conn->prepare($query);
-    $stm->bindParam(":id_theme" , $id_theme);
-    $stm->execute();
-    }
-    catch(PDOException $e){
-        throw new Exception("error changing the name of the theme" . $e->getMessage());
-    }
-}
+
 static function showAllthemes(){
     try{
         $db = new Database;
@@ -72,6 +57,43 @@ public static function filterByTheme($tagName) {
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
         
+    }
+}
+
+
+public static function getAllThemes() {
+    $db = new Database();
+    $conn = $db->getConnection();
+    $query = "SELECT * FROM theme";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public static function deleteTheme($id) {
+    try {
+        $db = new Database();
+        $conn = $db->getConnection();
+        $sql = "DELETE FROM theme WHERE id_theme = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        throw new Exception("Error deleting theme: " . $e->getMessage());
+    }
+}
+
+public static function editTheme($id, $name) {
+    try {
+        $db = new Database();
+        $conn = $db->getConnection();
+        $sql = "UPDATE theme SET name = :name WHERE id_theme = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        throw new Exception("Error editing theme: " . $e->getMessage());
     }
 }
 

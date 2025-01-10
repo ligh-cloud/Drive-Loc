@@ -41,7 +41,15 @@ class Article {
     static function getAllArticles() {
         $db = new Database();
         $conn = $db->getConnection();
-        $query = "SELECT * FROM article";
+        $query = "SELECT * FROM article WHERE statut = 'accepter' ";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    static function getAllArticlesAdmin() {
+        $db = new Database();
+        $conn = $db->getConnection();
+        $query = "SELECT * FROM article ";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -77,6 +85,20 @@ class Article {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
+        }
+    }
+    public static function acceptArticle($article_id) {
+        $db = new Database();
+        $conn = $db->getConnection();
+
+        $query = "UPDATE article SET statut = 'accepter' WHERE id_article = :article_id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
