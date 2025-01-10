@@ -22,6 +22,7 @@ class Favorite {
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
+            throw new Exception("can't add to favorite" . $e->getMessage() );
             return false;
         }
     }
@@ -38,6 +39,7 @@ class Favorite {
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
+            throw new Exception("can remove from favorite" . $e->getMessage());
             return false;
         }
     }

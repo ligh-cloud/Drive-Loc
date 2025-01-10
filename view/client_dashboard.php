@@ -35,6 +35,7 @@
                     <button onclick="showCommentsModal()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">View My Comments</button>
                     <a href="add_article.php" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">Add an Article</a>
                     <a href="list_article.php" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">View All Articles</a>
+                    <a href="article_client.php" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">View my article</a>
                 </div>
             </div>
         </div>

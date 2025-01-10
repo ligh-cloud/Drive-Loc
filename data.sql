@@ -71,12 +71,12 @@ CREATE TABLE IF NOT EXISTS avis (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE theme (
+CREATE TABLE IF NOT EXISTS theme (
     id_theme INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE article (
+CREATE TABLE IF NOT EXISTS article (
     id_article INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
@@ -85,33 +85,47 @@ CREATE TABLE article (
     video VARCHAR(150),
     user_id INT,
     theme_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
     FOREIGN KEY (theme_id) REFERENCES theme(id_theme)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
-CREATE TABLE commentaire (
+CREATE TABLE IF NOT EXISTS commentaire (
     id_commentaire INT AUTO_INCREMENT PRIMARY KEY,
     commentaire TEXT NOT NULL
 );
-CREATE TABLE commentaireArticle(
+
+CREATE TABLE IF NOT EXISTS commentaireArticle (
     id_commentaire INT,
     id_article INT,
-    FOREIGN KEY (id_commentaire) REFERENCES commentaire(id_commentaire),
+    FOREIGN KEY (id_commentaire) REFERENCES commentaire(id_commentaire)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
     FOREIGN KEY (id_article) REFERENCES article(id_article)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
-CREATE TABLE tags (
+CREATE TABLE IF NOT EXISTS tags (
     id_tag INT AUTO_INCREMENT PRIMARY KEY,
     tag_name VARCHAR(150) NOT NULL
 );
 
-CREATE TABLE acrticleTags (
+CREATE TABLE IF NOT EXISTS acrticleTags (
     id_article INT,
     id_tag INT,
     PRIMARY KEY (id_article, id_tag),
-    FOREIGN KEY (id_article) REFERENCES article(id_article),
+    FOREIGN KEY (id_article) REFERENCES article(id_article)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
     FOREIGN KEY (id_tag) REFERENCES tags(id_tag)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS favorites (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

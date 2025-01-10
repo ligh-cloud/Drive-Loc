@@ -101,5 +101,13 @@ class Article {
             return false;
         }
     }
+    public static function deleteArticle($id_article){
+        $db = new Database();
+        $conn = $db->getConnection();
+        $query = "DELETE FROM article WHERE id_article = :id_article";  
+        $stm = $conn->prepare($query);
+        $stm->bindParam(":id_article", $id_article);
+        $stm->execute();
+    }
 }
 ?>
