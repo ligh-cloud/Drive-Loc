@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $tag = new Tag($tag_name);
                 $tag->createTag();
             }
-            $tag_id = $tag->id;
+            $tag_id = $tag->id_tag;
             $article->addTag($article_id, $tag_id);
         }
 

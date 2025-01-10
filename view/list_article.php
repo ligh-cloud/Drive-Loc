@@ -1,17 +1,20 @@
 <?php
 require_once '../model/Article.php';
 require "../model/theme.php";
+require "../model/Tag.php";
 
 $themes = Theme::showAllThemes();
 $articles = [];
 
 if (isset($_POST['search_article'])) {
-    $articles = Article::searchByName($_POST['search_article']);
+    $articlesByName = Article::searchByName($_POST['search_article']);
+    $articlesByTag = Tag::getArticlesByTag($_POST['search_article']);
+    $articles = array_merge($articlesByName, $articlesByTag);
 } elseif (isset($_POST['theme_filter'])) {
     if ($_POST['theme_filter'] == 'all') {
         $articles = Article::getAllArticles();
     } else {
-        $articles = Theme::filterByTheme($_POST['theme_filter']);
+        $articles = array_unique( Theme::filterByTheme($_POST['theme_filter']));
     }
 } else {
     $articles = Article::getAllArticles();
@@ -67,7 +70,7 @@ if (isset($_POST['search_article'])) {
                 <form method="POST" class="space-y-2">
                     <label for="search_article" class="block text-gray-700 font-semibold text-lg mb-2">Search Articles</label>
                     <div class="flex space-x-4">
-                        <input type="text" name="search_article" id="search_article" placeholder="Enter article name..." 
+                        <input type="text" name="search_article" id="search_article" placeholder="Enter article name or tag..." 
                                class="flex-1 py-3 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300">
                         <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-sm hover:bg-blue-700 transition duration-300">
                             Search
